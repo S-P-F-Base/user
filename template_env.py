@@ -9,7 +9,7 @@ STATIC_DIR = BASE_DIR / "static"
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 USE_ACCEL = os.getenv("FASTAPISTATIC") != "1"
-SVC_ID = "template"
+SVC_ID = "user"
 
 
 def static_with_version(file: str) -> str:

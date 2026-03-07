@@ -1,0 +1,261 @@
+:root {
+    --bg: #0e0e0e;
+    --panel: #141414;
+    --panel-top: #1a1a1a;
+    --accent: #ff9800;
+    --text: #ffffff;
+    --muted: #9a9a9a;
+    --ok: #4caf50;
+    --bad: #f44336;
+    --line: #232323;
+    --line-soft: #1b1b1b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1.5rem 1.2rem 3rem;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.25rem;
+}
+
+.content {
+    min-width: 0;
+}
+
+/* SIDEBAR */
+.sidebar {
+    border-right: 1px solid var(--line-soft);
+    padding-right: 0.8rem;
+}
+
+.nav-header {
+    margin-bottom: 0.55rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.nav-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-btn {
+    display: block;
+    padding: 0.55rem 0.7rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-left: 3px solid transparent;
+    transition:
+        background-color 0.12s ease,
+        border-color 0.12s ease,
+        color 0.12s ease;
+}
+
+.nav-btn:hover {
+    background: #1c1c1c;
+    border-left-color: var(--accent);
+}
+
+.nav-btn.active {
+    background: #171717;
+    color: #ffb74d;
+    border-left-color: var(--accent);
+}
+
+.nav-btn-danger:hover {
+    border-left-color: var(--bad);
+}
+
+.nav-btn-admin:hover {
+    border-left-color: #64b5f6;
+}
+
+/* PAGE HEADER */
+.page-header {
+    margin-bottom: 1rem;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #ffb74d;
+}
+
+.subtitle {
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+/* COMMON PANELS */
+.panel {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    background: linear-gradient(180deg, var(--panel-top) 0%, var(--panel) 100%);
+    border-left: 3px solid #2a2a2a;
+}
+
+.panel-title {
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffb74d;
+}
+
+.panel-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+/* HELPERS */
+.muted {
+    color: var(--muted);
+}
+
+.ok {
+    color: var(--ok);
+}
+
+.bad {
+    color: var(--bad);
+}
+
+/* MOBILE / TABLET */
+@media (max-width: 760px) {
+    .page {
+        padding: 0.85rem 0.75rem 1.25rem;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--line-soft);
+        padding-right: 0;
+        padding-bottom: 0.7rem;
+    }
+
+    .nav-header {
+        display: none;
+    }
+
+    .nav-panel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.4rem;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 38px;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.82rem;
+        line-height: 1.2;
+        white-space: nowrap;
+
+        border-left: none;
+        border-bottom: 2px solid transparent;
+
+        background: #101010;
+    }
+
+    .nav-btn:hover {
+        border-left-color: transparent;
+        border-bottom-color: var(--accent);
+        background: #171717;
+    }
+
+    .nav-btn.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--accent);
+        background: #171717;
+        color: #ffb74d;
+    }
+
+    .nav-btn-danger {
+        color: #ffb3b3;
+    }
+
+    .page-header {
+        margin-bottom: 0.75rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .subtitle {
+        font-size: 0.84rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .page {
+        padding: 0.7rem 0.6rem 1rem;
+    }
+
+    .nav-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+    }
+
+    .nav-btn {
+        min-height: 34px;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.77rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.08rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .panel {
+        margin-top: 0.75rem;
+        padding: 0.8rem 0.85rem;
+    }
+
+    .panel-title {
+        margin-bottom: 0.55rem;
+        font-size: 0.88rem;
+    }
+
+    .panel-text {
+        font-size: 0.83rem;
+    }
+}

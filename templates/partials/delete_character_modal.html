@@ -1,0 +1,34 @@
+<div class="modal-backdrop" id="delete-char-modal" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-char-title">
+        <div class="modal-header">
+            <div class="modal-title" id="delete-char-title">Подтверждение удаления</div>
+        </div>
+
+        <div class="modal-body">
+            <p class="modal-text">
+                Вы собираетесь запросить удаление персонажа
+                <span class="modal-char-name" id="delete-char-name"></span>.
+            </p>
+
+            <p class="modal-text modal-text-danger">
+                Это действие нельзя будет отменить.
+            </p>
+
+            <p class="modal-text">
+                После обработки запроса персонаж и связанный с ним контент будут удалены с сервера.
+            </p>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="modal-btn" id="delete-char-cancel">
+                Отмена
+            </button>
+
+            <form method="post" id="delete-char-form">
+                <button type="submit" class="modal-btn modal-btn-danger">
+                    Подтвердить удаление
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

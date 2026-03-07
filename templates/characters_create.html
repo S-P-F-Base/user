@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Создать персонажа{% endblock %}
+{% block page_title %}Создать персонажа{% endblock %}
+{% block page_subtitle %}Создание персонажа или лорная заявка{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ 'css/characters_create.css' | ver }}">
+{% endblock %}
+
+{% block content %}
+
+<form class="char-form" method="post" action="/user/characters/create" id="char-create-form">
+    <section class="panel">
+        <div class="panel-title">Основная информация</div>
+
+        <div class="form-grid form-grid-top">
+            <div class="form-field">
+                <label class="form-label" for="char-role-type">
+                    Тип персонажа <span class="required-mark">*</span>
+                </label>
+                <select class="form-select" id="char-role-type" name="char_role_type" required>
+                    <option value="">Выберите тип</option>
+                    <option value="norm">Обычный</option>
+                    <option value="lore">Лорный</option>
+                </select>
+                <div class="form-help">
+                    Обычный - создание обычного персонажа.<br>
+                    Лорный - создание лорного персонажа.
+                </div>
+            </div>
+
+            <div class="form-field form-field-actions" id="lore-slot-inline-wrap" hidden>
+                <label class="form-label form-label-ghost">Действие</label>
+                <button class="submit-btn submit-btn-secondary submit-btn-full" type="button"
+                    id="open-lore-slot-request">
+                    Запросить дополнительный слот
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div id="normal-character-sections">
+        <section class="panel">
+            <div class="panel-title">Параметры персонажа</div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label class="form-label" for="char-name">
+                        Имя или позывной <span class="required-mark">*</span>
+                    </label>
+                    <input class="form-input" id="char-name" name="name" type="text" maxlength="64"
+                        placeholder="Например: Синица, Рена, Юнит дельта">
+                    <div class="form-help">
+                        Имя персонажа, позывной и т.д.
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="body-type">
+                        Тип тела <span class="required-mark">*</span>
+                    </label>
+                    <select class="form-select" id="body-type" name="body_type">
+                        <option value="">Выберите тип</option>
+                        <option value="bio">Биологический</option>
+                        <option value="synthetic">Синтетический</option>
+                    </select>
+                    <div class="form-help">
+                        Биологический - человек, модифицированный человек и т.д.<br>
+                        Синтетический - кукла и похожие.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">Дополнительный контент</div>
+
+            <div class="form-grid">
+                <div class="form-field form-field-wide">
+                    <label class="form-label" for="model-url">
+                        Ссылка на модель в Steam
+                    </label>
+                    <input class="form-input" id="model-url" name="model_url" type="url"
+                        placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=...">
+                    <div class="form-help">
+                        Укажите ссылку на основную модель персонажа.
+                    </div>
+                </div>
+
+                <div class="form-field form-field-wide">
+                    <label class="form-label">
+                        Дополнительный контент
+                    </label>
+
+                    <div class="dynamic-link-list" id="extra-content-list" data-dynamic-links>
+                        <div class="dynamic-link-row">
+                            <input class="form-input dynamic-link-input" type="text" name="extra_content"
+                                placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=..."
+                                data-dynamic-link-input>
+                            <button type="button" class="dynamic-link-remove" data-dynamic-link-remove
+                                aria-label="Удалить строку" hidden>
+                                x
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-help">
+                        Новая строка появится автоматически, когда последняя будет заполнена.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">Текст анкеты</div>
+
+            <div class="form-grid">
+                <div class="form-field form-field-wide">
+                    <label class="form-label" for="description">
+                        Описание <span class="required-mark">*</span>
+                    </label>
+                    <textarea class="form-textarea" id="description" name="description" rows="6" maxlength="4000"
+                        placeholder="Внешность, поведение, особенности, голос, характерные детали"></textarea>
+                    <div class="form-help">
+                        Краткое, но понятное описание персонажа.
+                    </div>
+                </div>
+
+                <div class="form-field form-field-wide">
+                    <label class="form-label" for="backstory">
+                        Предыстория <span class="required-mark">*</span>
+                    </label>
+                    <textarea class="form-textarea" id="backstory" name="backstory" rows="10" maxlength="12000"
+                        placeholder="Происхождение, важные события, служба, отношения, причины текущего положения"></textarea>
+                    <div class="form-help">
+                        История персонажа и ключевые сведения, которые нужно учитывать в игре.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel panel-pools" id="normal-pools-section">
+            <div class="panel-title">Пулы очков</div>
+
+            <div class="pool-grid">
+                <div class="pool-card" data-pool-card="mech">
+                    <div class="pool-label">Механический пул</div>
+                    <div class="pool-value js-pool-value" data-pool-value="mech">0</div>
+                </div>
+
+                <div class="pool-card" data-pool-card="rp">
+                    <div class="pool-label">РП пул</div>
+                    <div class="pool-value js-pool-value" data-pool-value="rp">0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">Механические черты и навыки</div>
+
+            <div class="trait-tabs" data-tab-root="mech">
+                <div class="trait-tab-bar">
+                    <button type="button" class="trait-tab active" data-tab-open="mech-buff">Баффы</button>
+                    <button type="button" class="trait-tab" data-tab-open="mech-debuff">Дебаффы</button>
+                    <button type="button" class="trait-tab" data-tab-open="mech-skill">Навыки</button>
+                </div>
+
+                <div class="trait-pane active" data-tab-pane="mech-buff">
+                    <div class="trait-toolbar">
+                        <input class="trait-search" type="search" placeholder="Поиск по механическим баффам..."
+                            data-trait-search="mech-buff">
+                    </div>
+
+                    <div class="trait-list" data-trait-list="mech-buff">
+                        {% for item in buff_mech %}
+                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
+                            <input type="checkbox" name="buff_mech_ids" value="{{ item.uid }}" data-pool="mech"
+                                data-effect="minus" data-cost="{{ item.cost }}">
+                            <span class="trait-checkmark"></span>
+                            <span class="trait-main">
+                                <span class="trait-name">{{ item.name }}</span>
+                                <span class="trait-desc">{{ item.description }}</span>
+                            </span>
+                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="trait-pane" data-tab-pane="mech-debuff">
+                    <div class="trait-toolbar">
+                        <input class="trait-search" type="search" placeholder="Поиск по механическим дебаффам..."
+                            data-trait-search="mech-debuff">
+                    </div>
+
+                    <div class="trait-list" data-trait-list="mech-debuff">
+                        {% for item in debuff_mech %}
+                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
+                            <input type="checkbox" name="debuff_mech_ids" value="{{ item.uid }}" data-pool="mech"
+                                data-effect="plus" data-cost="{{ item.cost }}">
+                            <span class="trait-checkmark"></span>
+                            <span class="trait-main">
+                                <span class="trait-name">{{ item.name }}</span>
+                                <span class="trait-desc">{{ item.description }}</span>
+                            </span>
+                            <span class="trait-cost trait-cost-good">+{{ item.cost }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="trait-pane" data-tab-pane="mech-skill">
+                    <div class="trait-toolbar">
+                        <input class="trait-search" type="search" placeholder="Поиск по навыкам..."
+                            data-trait-search="mech-skill">
+                    </div>
+
+                    <div class="trait-list" data-trait-list="mech-skill">
+                        {% for item in skills %}
+                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+                            data-desc="{{ item.description|lower }}" data-is_bio="{{ item.is_bio }}"
+                            data-is-bio="{{ item.is_bio }}">
+                            <input type="checkbox" name="skill_ids" value="{{ item.uid }}" data-pool="mech"
+                                data-effect="minus" data-cost="{{ item.cost }}">
+                            <span class="trait-checkmark"></span>
+                            <span class="trait-main">
+                                <span class="trait-name">{{ item.name }}</span>
+                                <span class="trait-desc">{{ item.description }}</span>
+                            </span>
+                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">РП-черты</div>
+
+            <div class="trait-tabs" data-tab-root="rp">
+                <div class="trait-tab-bar">
+                    <button type="button" class="trait-tab active" data-tab-open="rp-buff">Баффы</button>
+                    <button type="button" class="trait-tab" data-tab-open="rp-debuff">Дебаффы</button>
+                </div>
+
+                <div class="trait-pane active" data-tab-pane="rp-buff">
+                    <div class="trait-toolbar">
+                        <input class="trait-search" type="search" placeholder="Поиск по РП-баффам..."
+                            data-trait-search="rp-buff">
+                    </div>
+
+                    <div class="trait-list" data-trait-list="rp-buff">
+                        {% for item in buff_rp %}
+                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
+                            <input type="checkbox" name="buff_rp_ids" value="{{ item.uid }}" data-pool="rp"
+                                data-effect="minus" data-cost="{{ item.cost }}">
+                            <span class="trait-checkmark"></span>
+                            <span class="trait-main">
+                                <span class="trait-name">{{ item.name }}</span>
+                                <span class="trait-desc">{{ item.description }}</span>
+                            </span>
+                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="trait-pane" data-tab-pane="rp-debuff">
+                    <div class="trait-toolbar">
+                        <input class="trait-search" type="search" placeholder="Поиск по РП-дебаффам..."
+                            data-trait-search="rp-debuff">
+                    </div>
+
+                    <div class="trait-list" data-trait-list="rp-debuff">
+                        {% for item in debuff_rp %}
+                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
+                            <input type="checkbox" name="debuff_rp_ids" value="{{ item.uid }}" data-pool="rp"
+                                data-effect="plus" data-cost="{{ item.cost }}">
+                            <span class="trait-checkmark"></span>
+                            <span class="trait-main">
+                                <span class="trait-name">{{ item.name }}</span>
+                                <span class="trait-desc">{{ item.description }}</span>
+                            </span>
+                            <span class="trait-cost trait-cost-good">+{{ item.cost }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="lore-character-sections" hidden>
+        <section class="panel">
+            <div class="panel-title">Доступные лорные персонажи</div>
+
+            <div class="trait-toolbar">
+                <input class="trait-search" type="search" placeholder="Поиск по лорным персонажам..."
+                    id="lore-template-search">
+            </div>
+
+            {% if lore_templates %}
+            <div class="lore-list lore-list-scroll" id="lore-template-list">
+                {% for item in lore_templates %}
+                <label class="lore-item" data-lore-item data-name="{{ item.name|lower }}"
+                    data-desc="{{ (item.description or '')|lower }}">
+                    <input type="radio" name="lore_template_id" value="{{ item.uid }}">
+                    <span class="lore-checkmark"></span>
+                    <span class="lore-main">
+                        <span class="lore-name">{{ item.name }}</span>
+                        {% if item.description %}
+                        <span class="lore-desc">{{ item.description }}</span>
+                        {% endif %}
+                    </span>
+                </label>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="panel-text">
+                Доступных лорных персонажей сейчас нет.
+            </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <section class="panel">
+        <div class="submit-row submit-row-status">
+            <div class="validation-state js-submit-state">Выберите тип персонажа.</div>
+            <button class="submit-btn" type="submit" id="char-submit-btn">Отправить заявку</button>
+        </div>
+    </section>
+</form>
+
+{% include "partials/lore_slot_modal.html" %}
+
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ 'js/character_create.js' | ver }}"></script>
+{% endblock %}

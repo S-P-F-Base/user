@@ -1,0 +1,30 @@
+<div class="modal-backdrop" id="lore-slot-modal" hidden>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="lore-slot-modal-title">
+        <div class="modal-title" id="lore-slot-modal-title">Запрос дополнительного лорного слота</div>
+
+        <div class="modal-body">
+            <p class="modal-text">
+                Укажите причину, по которой вам нужен дополнительный слот лорного персонажа.
+            </p>
+
+            <form method="post" action="/user/characters/request-lore-slot" id="lore-slot-form">
+                <div class="form-field">
+                    <label class="form-label" for="lore-slot-reason">
+                        Причина <span class="required-mark">*</span>
+                    </label>
+                    <textarea class="form-textarea" id="lore-slot-reason" name="reason" rows="5"
+                        placeholder="Кратко опишите, зачем вам нужен дополнительный слот" required></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn" id="close-lore-slot-modal">
+                        Отмена
+                    </button>
+                    <button type="submit" class="modal-btn modal-btn-primary">
+                        Отправить запрос
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Персонажи{% endblock %}
+{% block page_title %}Персонажи{% endblock %}
+{% block page_subtitle %}Список персонажей пользователя{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ 'css/characters.css' | ver }}">
+{% endblock %}
+
+{% block content %}
+
+{% if characters %}
+<section class="character-grid">
+    {% for character in characters %}
+    <article class="character-card character-card-{{ character.char_type }}">
+        <div class="character-top">
+            <div class="character-main">
+                <div class="character-name">{{ character.name }}</div>
+                <div class="character-meta">
+                    <span class="character-type {{ character.type_class }}">
+                        {{ character.type_label }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-menu">
+                <button type="button" class="card-menu-toggle" aria-label="Открыть меню персонажа" data-menu-toggle>
+                    ⋯
+                </button>
+
+                <div class="card-menu-dropdown" data-menu-dropdown>
+                    <button type="button" class="card-menu-action card-menu-action-danger" data-delete-open
+                        data-char-uid="{{ character.uid }}" data-char-name="{{ character.name }}">
+                        Запросить удаление
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="character-divider"></div>
+
+        <div class="character-info">
+            <div class="character-row">
+                <div class="character-label">Discord анкета</div>
+                <div class="character-value">
+                    {% if character.discord_url %}
+                    <a class="character-link" href="{{ character.discord_url }}" target="_blank"
+                        rel="noopener noreferrer">
+                        Открыть в Discord
+                    </a>
+                    {% else %}
+                    <span class="muted">Не указана</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="character-row">
+                <div class="character-label">Контент</div>
+                <div class="character-value">
+                    {{ character.content_count }}
+                </div>
+            </div>
+        </div>
+        {% if character.content_items %}
+        <div class="character-divider"></div>
+
+        <div class="character-content">
+            <div class="character-content-title">Workshop</div>
+
+            <div class="content-id-list" data-content-list>
+                {% for item in character.content_items[:3] %}
+                <a class="content-id-chip" href="{{ item.url }}" target="_blank" rel="noopener noreferrer"
+                    title="{{ item.id }}">
+                    {{ item.label }}
+                </a>
+                {% endfor %}
+
+                {% for item in character.content_items[3:] %}
+                <a class="content-id-chip is-extra" href="{{ item.url }}" target="_blank" rel="noopener noreferrer"
+                    title="{{ item.id }}" hidden>
+                    {{ item.label }}
+                </a>
+                {% endfor %}
+
+                {% if character.content_count > 3 %}
+                <button type="button" class="content-more-toggle" data-content-toggle>
+                    + ещё {{ character.content_count - 3 }}
+                </button>
+                {% endif %}
+            </div>
+
+            {% if character.content_count > 3 %}
+            <div class="content-actions" data-content-actions hidden>
+                <button type="button" class="content-hide-toggle" data-content-hide>
+                    Скрыть
+                </button>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<section class="panel">
+    <div class="panel-title">Персонажи</div>
+    <div class="panel-text">У вас пока нет персонажей.</div>
+</section>
+{% endif %}
+
+{% include "partials/delete_character_modal.html" %}
+
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ 'js/character_delete_modal.js' | ver }}"></script>
+<script src="{{ 'js/character_expand_workshop_id.js' | ver }}"></script>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Личный кабинет{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ 'css/base.css' | ver }}">
+    {% block extra_css %}{% endblock %}
+    {% block extra_js_head %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="page layout">
+
+        <aside class="sidebar">
+            <div class="nav-header">Навигация</div>
+
+            <nav class="nav-panel">
+                <a class="nav-btn {% if active_page == 'profile' %}active{% endif %}" href="/user">
+                    Профиль
+                </a>
+
+                <a class="nav-btn {% if active_page == 'characters' %}active{% endif %}" href="/user/characters">
+                    Персонажи
+                </a>
+
+                <a class="nav-btn {% if active_page == 'create_character' %}active{% endif %}"
+                    href="/user/characters/create">
+                    Создать персонажа
+                </a>
+
+                <a class="nav-btn {% if active_page == 'limits' %}active{% endif %}" href="/user/limits">
+                    Лимиты
+                </a>
+
+                <a class="nav-btn {% if active_page == 'settings' %}active{% endif %}" href="/user/settings">
+                    Настройки
+                </a>
+
+                {% if user.is_admin %}
+                <a class="nav-btn nav-btn-admin {% if active_page == 'admin' %}active{% endif %}" href="/admin">
+                    Админ меню
+                </a>
+                {% endif %}
+
+                <a class="nav-btn nav-btn-danger" href="/user/logout">
+                    Выход
+                </a>
+            </nav>
+        </aside>
+
+        <main class="content">
+
+            <header class="page-header">
+                <h1>{% block page_title %}Личный кабинет{% endblock %}</h1>
+                <div class="subtitle">{% block page_subtitle %}Общая информация по аккаунту{% endblock %}</div>
+            </header>
+
+            {% block content %}{% endblock %}
+
+        </main>
+    </div>
+
+    {% block extra_js_body %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет{% endblock %}
+{% block page_title %}Личный кабинет{% endblock %}
+{% block page_subtitle %}Общая информация по аккаунту{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ 'css/user.css' | ver }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="home-hero">
+    <div class="home-hero-top">
+        <div class="home-main">
+            <div class="home-kicker">Профиль пользователя</div>
+            <div class="home-title">{{ user.username }}</div>
+        </div>
+
+        <div class="home-avatar-wrap">
+            <img class="home-avatar" src="{{ user.avatar }}" alt="Аватар пользователя">
+        </div>
+    </div>
+
+    <div class="home-divider"></div>
+
+    <div class="identity-grid">
+        <div class="identity-item">
+            <div class="identity-label">Steam ID</div>
+            <div class="identity-value">{{ user.steam_id }}</div>
+        </div>
+
+        <div class="identity-item">
+            <div class="identity-label">Discord ID</div>
+            <div class="identity-value">{{ user.discord_id }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <div class="info-card">
+        <div class="card-label">Обычные слоты</div>
+        <div class="card-value">{{ summary.char_slot_left }}</div>
+    </div>
+
+    <div class="info-card">
+        <div class="card-label">Лорные слоты</div>
+        <div class="card-value">{{ summary.lore_char_slot_left }}</div>
+    </div>
+
+    <div class="info-card">
+        <div class="card-label">Доступный вес</div>
+        <div class="card-value">{{ summary.weight_left_pretty }}</div>
+    </div>
+
+    <div class="info-card info-card-soft {% if blacklists %}state-bad{% else %}state-ok{% endif %}">
+        <div class="card-label">Ограничения</div>
+
+        {% if blacklists %}
+        <div class="card-value bad">{{ blacklists|length }}</div>
+        {% else %}
+        <div class="card-value ok">Нет</div>
+        {% endif %}
+    </div>
+</section>
+
+{% if warnings %}
+<section class="panel">
+    <div class="panel-title">Внимание</div>
+
+    <div class="warning-list">
+        {% for item in warnings %}
+        <div class="warning-item warning-{{ item.level }}">
+            <div class="warning-text">{{ item.text }}</div>
+
+            {% if item.time_utc and item.time_label %}
+            <div class="warning-time js-local-datetime" data-utc="{{ item.time_utc }}"
+                data-label="{{ item.time_label }}">
+                {{ item.time_label }}: {{ item.time_utc }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="panel">
+    <div class="panel-title">Ограничения</div>
+
+    {% if blacklists %}
+    <div class="blacklist-list compact">
+        {% for item in blacklists %}
+        <div class="blacklist-item">
+            <div class="blacklist-title">{{ item.title }}</div>
+            <div class="blacklist-desc">{{ item.description }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="panel-text">
+        Активных ограничений нет.
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ 'js/user_local_datetime.js' | ver }}"></script>
+{% endblock %}

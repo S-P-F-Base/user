@@ -1,0 +1,86 @@
+.login-wrap {
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem 1.05rem;
+    background: linear-gradient(180deg, var(--panel-top) 0%, var(--panel) 100%);
+    border-left: 4px solid var(--accent);
+}
+
+.login-title {
+    margin-top: 0.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffb74d;
+}
+
+.login-text {
+    margin-top: 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.login-actions {
+    margin-top: 0.95rem;
+}
+
+.login-discord-btn {
+    display: block;
+    width: 100%;
+    padding: 0.82rem 1rem;
+    border: 1px solid #2a2a2a;
+    background: #101010;
+    color: var(--text);
+    text-decoration: none;
+    text-align: center;
+    font: inherit;
+    font-weight: 600;
+}
+
+.login-discord-btn:hover {
+    border-color: var(--accent);
+    color: #ffb74d;
+    background: #151515;
+}
+
+.login-note {
+    margin-top: 0.8rem;
+    font-size: 0.77rem;
+    line-height: 1.45;
+    color: var(--muted);
+}
+
+.login-alert {
+    margin-bottom: 0.8rem;
+    padding: 0.7rem 0.8rem;
+    background: #101010;
+    border-left: 3px solid var(--bad);
+    color: #ffb3b3;
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+    .login-wrap {
+        min-height: 60vh;
+    }
+
+    .login-card {
+        max-width: 100%;
+        padding: 0.95rem 1rem;
+    }
+
+    .login-title {
+        font-size: 1.08rem;
+    }
+
+    .login-text {
+        font-size: 0.86rem;
+    }
+}

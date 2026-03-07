@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="{{ 'css/base.css' | ver }}">
+    <link rel="stylesheet" href="{{ 'css/login.css' | ver }}">
+</head>
+
+<body>
+    <div class="page">
+        <section class="login-wrap">
+            <div class="login-card">
+                {% if error %}
+                <div class="login-alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <div class="login-title">
+                    Авторизация
+                </div>
+
+                <div class="login-text">
+                    Для входа используется Discord-аккаунт.<br>
+                    После подтверждения вы будете перенаправлены обратно на
+                    сайт.
+                </div>
+
+                <div class="login-actions">
+                    <a class="login-discord-btn" href="/auth/discord/login">
+                        Войти через Discord
+                    </a>
+                </div>
+
+                <div class="login-note">
+                    Discord используется как основной способ идентификации пользователя.
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

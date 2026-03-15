@@ -3,8 +3,8 @@
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Request, Response
+from fastapi.responses import HTMLResponse
 
 from template_env import templates
 
@@ -185,7 +185,7 @@ def build_limits_page_data(now_utc: datetime) -> dict[str, Any]:
 
 
 @router.get("/user/limits", response_class=HTMLResponse)
-async def limits_page(request: Request) -> HTMLResponse | RedirectResponse:
+async def limits_page(request: Request) -> Response:
     auth_redirect = require_auth(request)
     if auth_redirect is not None:
         return auth_redirect

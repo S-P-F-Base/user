@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from template_env import templates
 
 from . import db
+from .auth_context import require_auth
 
 router = APIRouter()
 
@@ -89,6 +90,10 @@ async def create_character_page(
     request: Request,
     popup: str | None = None,
 ) -> HTMLResponse:
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     user = db.load_current_user()
 
     return templates.TemplateResponse(
@@ -106,6 +111,10 @@ async def create_character_page(
 
 @router.post("/user/characters/create")
 async def create_character(request: Request) -> RedirectResponse:
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     form_data = await read_urlencoded_form(request)
     role_type = first_value(form_data, "char_role_type")
 
@@ -175,6 +184,10 @@ async def create_character(request: Request) -> RedirectResponse:
 
 @router.post("/user/characters/create/request-lore-slot")
 async def request_lore_slot(request: Request) -> RedirectResponse:
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     form_data = await read_urlencoded_form(request)
     reason = first_value(form_data, "reason")
 

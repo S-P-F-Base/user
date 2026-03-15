@@ -3,11 +3,12 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from template_env import templates
 
 from . import db
+from .auth_context import require_auth
 
 router = APIRouter()
 
@@ -80,7 +81,11 @@ def build_user_page_data() -> dict[str, Any]:
 
 
 @router.get("/user", response_class=HTMLResponse)
-async def user_page(request: Request) -> HTMLResponse:
+async def user_page(request: Request) -> HTMLResponse | RedirectResponse:
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     page_data = build_user_page_data()
 
     return templates.TemplateResponse(

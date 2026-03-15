@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from template_env import templates
 
 from . import db
+from .auth_context import require_auth
 
 router = APIRouter()
 
@@ -65,7 +66,11 @@ def map_character_row(row: dict[str, Any]) -> dict[str, Any]:
 
 
 @router.get("/user/characters", response_class=HTMLResponse)
-async def user_characters_page(request: Request) -> HTMLResponse:
+async def user_characters_page(request: Request) -> HTMLResponse | RedirectResponse:
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     rows = db.load_user_characters()
     user = db.load_current_user()
     characters = [map_character_row(row) for row in rows]
@@ -86,6 +91,10 @@ async def request_character_delete(
     request: Request,
     char_uid: int,
 ):
+    auth_redirect = require_auth(request)
+    if auth_redirect is not None:
+        return auth_redirect
+
     # TODO:
     # 1. проверить, что персонаж принадлежит текущему пользователю
     # 2. создать запись запроса на удаление / пометку в БД

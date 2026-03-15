@@ -5,7 +5,10 @@ import httpx
 
 log = logging.getLogger(__name__)
 
+DBS_SERVICE_ID = "dbs"
+DBS_SOCKET = Path("/run/spf/dbs.sock")
 OVERLORD_SOCKET = Path("/run/spf/overlord.sock")
+DBS_TIMEOUT = 5.0
 
 
 class Constants:

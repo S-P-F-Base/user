@@ -1,9 +1,14 @@
 import contextlib
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
+from router.auth_context import (
+    get_request_auth_payload,
+    reset_current_auth_payload,
+    set_current_auth_payload,
+)
 from router.characters import router as characters_router
 from router.characters_create import router as characters_create_router
 from router.limits import router as limits_router
@@ -34,6 +39,18 @@ if os.getenv("FASTAPISTATIC") == "1":
         StaticFiles(directory="static"),
         name="static",
     )
+
+
+@app.middleware("http")
+async def auth_context_middleware(request: Request, call_next):
+    payload = get_request_auth_payload(request)
+    request.state.auth_payload = payload
+    ctx_token = set_current_auth_payload(payload)
+    try:
+        return await call_next(request)
+    finally:
+        reset_current_auth_payload(ctx_token)
+
 
 app.include_router(overlord_api_router)
 app.include_router(user_router)

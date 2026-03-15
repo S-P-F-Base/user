@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 
 from template_env import templates
 
-from .base import get_dummy_user
+from . import db
 
 router = APIRouter()
 
@@ -64,33 +64,19 @@ def map_character_row(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def get_dummy_characters() -> list[dict[str, Any]]:
-    rows = [
-        {
-            "uid": 1,
-            "cid": 100,
-            "name": "AN-94",
-            "discord_url": "1321306723423883284/1321307574242377769",
-            "char_type": "lore",
-            "content_ids": [
-                "0",
-                "1",
-            ],
-        }
-    ]
-
-    return [map_character_row(row) for row in rows]
-
-
 @router.get("/user/characters", response_class=HTMLResponse)
 async def user_characters_page(request: Request) -> HTMLResponse:
+    rows = db.load_user_characters()
+    user = db.load_current_user()
+    characters = [map_character_row(row) for row in rows]
+
     return templates.TemplateResponse(
         "characters.html",
         {
             "request": request,
             "active_page": "characters",
-            "user": get_dummy_user(),
-            "characters": get_dummy_characters(),
+            "user": user,
+            "characters": characters,
         },
     )
 

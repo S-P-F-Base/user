@@ -18,7 +18,7 @@
         </div>
 
         <div class="home-avatar-wrap">
-            <img class="home-avatar" src="{{ user.avatar }}" alt="Аватар пользователя">
+            <img class="home-avatar" src="{{ user.avatar or '/static/img/avatar-placeholder.svg' }}" alt="Аватар пользователя">
         </div>
     </div>
 
@@ -109,3 +109,4 @@
 {% block extra_js_body %}
 <script src="{{ 'js/user_local_datetime.js' | ver }}"></script>
 {% endblock %}
+

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from template_env import templates
+from . import db
 
 router = APIRouter()
 
@@ -34,11 +35,6 @@ def extract_request_token(request: Request) -> str:
     return ""
 
 
-def revoke_auth_token(token: str) -> None:
-    # TODO: revoke token in DB (or mark as inactive) so it cannot be reused.
-    _ = token
-
-
 @router.get("/user/login", response_class=HTMLResponse)
 async def login_page(
     request: Request,
@@ -59,7 +55,7 @@ async def login_page(
 async def logout(request: Request) -> RedirectResponse:
     token = extract_request_token(request)
     if token:
-        revoke_auth_token(token)
+        db.revoke_auth_token(token)
 
     response = RedirectResponse(
         url="/user/login?notice=logged_out",

@@ -1,6 +1,5 @@
 ﻿from __future__ import annotations
 
-from typing import Any
 from urllib.parse import parse_qs
 
 from fastapi import APIRouter, Request
@@ -8,7 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 
 from template_env import templates
 
-from .base import get_dummy_user
+from . import db
 
 router = APIRouter()
 
@@ -76,30 +75,6 @@ def first_value(form_data: dict[str, list[str]], key: str) -> str:
     return values[0].strip()
 
 
-# --- Integration stubs (replace with real API calls) ---
-def load_trait_registry() -> list[dict[str, Any]]:
-    return []
-
-
-def load_lore_templates() -> list[dict[str, Any]]:
-    return []
-
-
-def send_character_create(payload: dict[str, Any]) -> tuple[bool, str]:
-    _ = payload
-    return True, "created"
-
-
-def send_lore_character_create(lore_template_id: str) -> tuple[bool, str]:
-    _ = lore_template_id
-    return True, "lore_requested"
-
-
-def send_lore_slot_request(reason: str) -> tuple[bool, str]:
-    _ = reason
-    return True, "lore_slot_sent"
-
-
 # --- Validation helpers ---
 def workshop_weight_ok(model_id: str, extra_ids: set[str]) -> bool:
     workshop_ids = set(extra_ids)
@@ -114,15 +89,17 @@ async def create_character_page(
     request: Request,
     popup: str | None = None,
 ) -> HTMLResponse:
+    user = db.load_current_user()
+
     return templates.TemplateResponse(
         "characters_create.html",
         {
             "request": request,
             "active_page": "create_character",
-            "user": get_dummy_user(),
+            "user": user,
             "popup": get_popup(popup),
-            "traits": load_trait_registry(),
-            "lore_templates": load_lore_templates(),
+            "traits": db.load_trait_registry(),
+            "lore_templates": db.load_lore_templates(),
         },
     )
 
@@ -140,7 +117,7 @@ async def create_character(request: Request) -> RedirectResponse:
                 status_code=303,
             )
 
-        ok, popup_code = send_lore_character_create(lore_template_id)
+        ok, popup_code = db.send_lore_character_create(lore_template_id)
         if not ok:
             popup_code = popup_code or "request_failed"
 
@@ -186,7 +163,7 @@ async def create_character(request: Request) -> RedirectResponse:
         "extra_content_ids": sorted(extra_ids, key=int),
     }
 
-    ok, popup_code = send_character_create(payload)
+    ok, popup_code = db.send_character_create(payload)
     if not ok:
         popup_code = popup_code or "request_failed"
 
@@ -207,7 +184,7 @@ async def request_lore_slot(request: Request) -> RedirectResponse:
             status_code=303,
         )
 
-    ok, popup_code = send_lore_slot_request(reason)
+    ok, popup_code = db.send_lore_slot_request(reason)
     if not ok:
         popup_code = popup_code or "request_failed"
 

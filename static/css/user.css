@@ -30,7 +30,9 @@
 }
 
 .home-avatar-wrap {
-    padding: 0.35rem;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
     background: #111111;
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -38,10 +40,11 @@
 }
 
 .home-avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
     object-fit: cover;
+    object-position: center;
     background: #222;
     display: block;
 }
@@ -191,14 +194,13 @@
     }
 
     .home-avatar-wrap {
-        padding: 0.25rem;
+        width: 60px;
+        height: 60px;
         border-radius: 8px;
     }
 
     .home-avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 6px;
+        border-radius: inherit;
     }
 
     .identity-grid {

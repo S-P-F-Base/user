@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse
 
 from template_env import templates
 
-from .base import get_dummy_user
+from . import db
 
 router = APIRouter()
 
@@ -53,15 +53,16 @@ def map_blacklist(key: str) -> dict[str, str]:
     }
 
 
-def get_dummy_user_page_data() -> dict[str, Any]:
-    blacklist_keys = []
+def build_user_page_data() -> dict[str, Any]:
+    state = db.load_user_page_state()
+    blacklist_keys = state["blacklist_keys"]
     blacklists = [map_blacklist(key) for key in dict.fromkeys(blacklist_keys)]
 
-    char_slot_left = 0
-    lore_char_slot_left = 0
-    weight_left_bytes = 0
+    char_slot_left = int(state["char_slot_left"])
+    lore_char_slot_left = int(state["lore_char_slot_left"])
+    weight_left_bytes = int(state["weight_left_bytes"])
 
-    warnings = []
+    warnings = list(state["warnings"])
 
     summary = {
         "char_slot_left": char_slot_left,
@@ -70,7 +71,7 @@ def get_dummy_user_page_data() -> dict[str, Any]:
     }
 
     return {
-        "user": get_dummy_user(),
+        "user": db.load_current_user(),
         "summary": summary,
         "blacklists": blacklists,
         "warnings": warnings,
@@ -80,7 +81,7 @@ def get_dummy_user_page_data() -> dict[str, Any]:
 
 @router.get("/user", response_class=HTMLResponse)
 async def user_page(request: Request) -> HTMLResponse:
-    page_data = get_dummy_user_page_data()
+    page_data = build_user_page_data()
 
     return templates.TemplateResponse(
         "user.html",

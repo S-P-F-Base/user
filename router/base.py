@@ -1,11 +1,5 @@
-from typing import Any
+from __future__ import annotations
 
+from .db import load_current_user
 
-def get_dummy_user() -> dict[str, Any]:
-    return {
-        "username": "XXX",
-        "avatar": "https://placehold.co/128x128",
-        "steam_id": "XXX",
-        "discord_id": "XXX",
-        "is_admin": True,
-    }
+__all__ = ["load_current_user"]

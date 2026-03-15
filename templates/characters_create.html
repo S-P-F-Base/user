@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Создать персонажа{% endblock %}
 {% block page_title %}Создать персонажа{% endblock %}
@@ -6,9 +6,114 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ 'css/characters_create.css' | ver }}">
+<link rel="stylesheet" href="{{ 'css/status_popup.css' | ver }}">
 {% endblock %}
 
+{% macro render_trait_group(group, traits) %}
+<div class="trait-pane {% if group.active %}active{% endif %}" data-tab-pane="{{ group.key }}">
+    <div class="trait-toolbar">
+        <input class="trait-search" type="search" placeholder="{{ group.search_placeholder }}"
+            data-trait-search="{{ group.key }}">
+    </div>
+
+    <div class="trait-list" data-trait-list="{{ group.key }}">
+        {% if group.neutral %}
+        {% set group_items = traits|selectattr("cost", "equalto", 0)|list %}
+        {% for item in group_items %}
+        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+            data-desc="{{ (item.description or '')|lower }}" data-is-bio="{{ item.is_bio }}">
+            <input type="checkbox" name="neutral_trait_ids" value="{{ item.uid }}" data-pool="{{ item.domain }}"
+                data-effect="{{ 'plus' if item.kind == 'debuff' else 'minus' }}" data-cost="{{ item.cost }}">
+            <span class="trait-checkmark"></span>
+            <span class="trait-main">
+                <span class="trait-name">{{ item.name }}</span>
+                <span class="trait-desc">{{ item.description }}</span>
+                <span class="trait-meta">
+                    <span class="trait-chip">{% if item.domain == 'mech' %}Мех{% else %}РП{% endif %}</span>
+                    <span class="trait-chip trait-chip-muted">
+                        {% if item.kind == 'skill' %}Навык{% elif item.kind == 'debuff' %}Дебафф{% else %}Бафф{% endif
+                        %}
+                    </span>
+                </span>
+            </span>
+            <span class="trait-cost trait-cost-neutral">0</span>
+        </label>
+        {% endfor %}
+        {% else %}
+        {% set group_items = traits|selectattr("kind", "equalto", group.kind)|rejectattr("cost", "equalto", 0)|list %}
+        {% for item in group_items %}
+        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
+            data-desc="{{ (item.description or '')|lower }}" data-is-bio="{{ item.is_bio }}">
+            <input type="checkbox" name="{{ group.input_name }}" value="{{ item.uid }}" data-pool="{{ item.domain }}"
+                data-effect="{{ group.effect }}" data-cost="{{ item.cost }}">
+            <span class="trait-checkmark"></span>
+            <span class="trait-main">
+                <span class="trait-name">{{ item.name }}</span>
+                <span class="trait-desc">{{ item.description }}</span>
+                <span class="trait-meta">
+                    <span class="trait-chip">{% if item.domain == 'mech' %}Мех{% else %}РП{% endif %}</span>
+                </span>
+            </span>
+            <span class="trait-cost {{ group.cost_class }}">{{ group.cost_sign }}{{ item.cost }}</span>
+        </label>
+        {% endfor %}
+        {% endif %}
+
+        {% if not group_items %}
+        <div class="panel-text">Список пока пуст. Подключите источник данных в заглушках роутера.</div>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
 {% block content %}
+
+{% set trait_groups = [
+{
+"key": "buff",
+"label": "Баффы",
+"active": True,
+"kind": "buff",
+"effect": "minus",
+"input_name": "buff_ids",
+"cost_class": "trait-cost-bad",
+"cost_sign": "-",
+"neutral": False,
+"search_placeholder": "Поиск по баффам..."
+},
+{
+"key": "debuff",
+"label": "Дебаффы",
+"active": False,
+"kind": "debuff",
+"effect": "plus",
+"input_name": "debuff_ids",
+"cost_class": "trait-cost-good",
+"cost_sign": "+",
+"neutral": False,
+"search_placeholder": "Поиск по дебаффам..."
+},
+{
+"key": "skill",
+"label": "Навыки",
+"active": False,
+"kind": "skill",
+"effect": "minus",
+"input_name": "skill_ids",
+"cost_class": "trait-cost-bad",
+"cost_sign": "-",
+"neutral": False,
+"search_placeholder": "Поиск по навыкам..."
+},
+{
+"key": "neutral",
+"label": "Без стоимости",
+"active": False,
+"input_name": "neutral_trait_ids",
+"neutral": True,
+"search_placeholder": "Поиск по чертам и навыкам без стоимости..."
+}
+] %}
 
 <form class="char-form" method="post" action="/user/characters/create" id="char-create-form">
     <section class="panel">
@@ -17,7 +122,7 @@
         <div class="form-grid form-grid-top">
             <div class="form-field">
                 <label class="form-label" for="char-role-type">
-                    Тип персонажа <span class="required-mark">*</span>
+                    Тип персонажа
                 </label>
                 <select class="form-select" id="char-role-type" name="char_role_type" required>
                     <option value="">Выберите тип</option>
@@ -47,21 +152,18 @@
             <div class="form-grid">
                 <div class="form-field">
                     <label class="form-label" for="char-name">
-                        Имя или позывной <span class="required-mark">*</span>
+                        Имя или позывной
                     </label>
                     <input class="form-input" id="char-name" name="name" type="text" maxlength="64"
                         placeholder="Например: Синица, Рена, Юнит дельта">
-                    <div class="form-help">
-                        Имя персонажа, позывной и т.д.
-                    </div>
+                    <div class="form-help">Имя персонажа, позывной и т.д.</div>
                 </div>
 
                 <div class="form-field">
                     <label class="form-label" for="body-type">
-                        Тип тела <span class="required-mark">*</span>
+                        Тип тела
                     </label>
                     <select class="form-select" id="body-type" name="body_type">
-                        <option value="">Выберите тип</option>
                         <option value="bio">Биологический</option>
                         <option value="synthetic">Синтетический</option>
                     </select>
@@ -78,25 +180,19 @@
 
             <div class="form-grid">
                 <div class="form-field form-field-wide">
-                    <label class="form-label" for="model-url">
-                        Ссылка на модель в Steam
-                    </label>
-                    <input class="form-input" id="model-url" name="model_url" type="url"
-                        placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=...">
-                    <div class="form-help">
-                        Укажите ссылку на основную модель персонажа.
-                    </div>
+                    <label class="form-label" for="model-id">Модель в Steam</label>
+                    <input class="form-input" id="model-id" name="model_id" type="text"
+                        placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=... или ID">
+                    <div class="form-help">Можно указать ссылку Steam Workshop или числовой ID.</div>
                 </div>
 
                 <div class="form-field form-field-wide">
-                    <label class="form-label">
-                        Дополнительный контент
-                    </label>
+                    <label class="form-label">Дополнительный контент</label>
 
                     <div class="dynamic-link-list" id="extra-content-list" data-dynamic-links>
                         <div class="dynamic-link-row">
                             <input class="form-input dynamic-link-input" type="text" name="extra_content"
-                                placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=..."
+                                placeholder="https://steamcommunity.com/sharedfiles/filedetails/?id=... или ID"
                                 data-dynamic-link-input>
                             <button type="button" class="dynamic-link-remove" data-dynamic-link-remove
                                 aria-label="Удалить строку" hidden>
@@ -106,7 +202,12 @@
                     </div>
 
                     <div class="form-help">
-                        Новая строка появится автоматически, когда последняя будет заполнена.
+                        Разрешены только Steam Workshop-ссылки или числовой ID аддона. Новая строка появляется
+                        автоматически,
+                        когда вы заполняете последнюю.
+                    </div>
+                    <div class="workshop-inline-state" id="workshop-inline-state" aria-live="polite">
+                        Начните вводить ссылки или ID. Проверка запускается автоматически.
                     </div>
                 </div>
             </div>
@@ -118,24 +219,20 @@
             <div class="form-grid">
                 <div class="form-field form-field-wide">
                     <label class="form-label" for="description">
-                        Описание <span class="required-mark">*</span>
+                        Описание
                     </label>
-                    <textarea class="form-textarea" id="description" name="description" rows="6" maxlength="4000"
+                    <textarea class="form-textarea form-textarea-large" id="description" name="description" rows="8"
                         placeholder="Внешность, поведение, особенности, голос, характерные детали"></textarea>
-                    <div class="form-help">
-                        Краткое, но понятное описание персонажа.
-                    </div>
+                    <div class="form-help">Краткое, но понятное описание персонажа.</div>
                 </div>
 
                 <div class="form-field form-field-wide">
                     <label class="form-label" for="backstory">
-                        Предыстория <span class="required-mark">*</span>
+                        Предыстория
                     </label>
-                    <textarea class="form-textarea" id="backstory" name="backstory" rows="10" maxlength="12000"
+                    <textarea class="form-textarea form-textarea-large" id="backstory" name="backstory" rows="14"
                         placeholder="Происхождение, важные события, служба, отношения, причины текущего положения"></textarea>
-                    <div class="form-help">
-                        История персонажа и ключевые сведения, которые нужно учитывать в игре.
-                    </div>
+                    <div class="form-help">История персонажа и ключевые сведения, которые нужно учитывать в игре.</div>
                 </div>
             </div>
         </section>
@@ -157,141 +254,21 @@
         </section>
 
         <section class="panel">
-            <div class="panel-title">Механические черты и навыки</div>
+            <div class="panel-title">Черты и навыки</div>
 
-            <div class="trait-tabs" data-tab-root="mech">
+            <div class="trait-tabs" data-tab-root="traits">
                 <div class="trait-tab-bar">
-                    <button type="button" class="trait-tab active" data-tab-open="mech-buff">Баффы</button>
-                    <button type="button" class="trait-tab" data-tab-open="mech-debuff">Дебаффы</button>
-                    <button type="button" class="trait-tab" data-tab-open="mech-skill">Навыки</button>
+                    {% for group in trait_groups %}
+                    <button type="button" class="trait-tab {% if group.active %}active{% endif %}"
+                        data-tab-open="{{ group.key }}">
+                        {{ group.label }}
+                    </button>
+                    {% endfor %}
                 </div>
 
-                <div class="trait-pane active" data-tab-pane="mech-buff">
-                    <div class="trait-toolbar">
-                        <input class="trait-search" type="search" placeholder="Поиск по механическим баффам..."
-                            data-trait-search="mech-buff">
-                    </div>
-
-                    <div class="trait-list" data-trait-list="mech-buff">
-                        {% for item in buff_mech %}
-                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
-                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
-                            <input type="checkbox" name="buff_mech_ids" value="{{ item.uid }}" data-pool="mech"
-                                data-effect="minus" data-cost="{{ item.cost }}">
-                            <span class="trait-checkmark"></span>
-                            <span class="trait-main">
-                                <span class="trait-name">{{ item.name }}</span>
-                                <span class="trait-desc">{{ item.description }}</span>
-                            </span>
-                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="trait-pane" data-tab-pane="mech-debuff">
-                    <div class="trait-toolbar">
-                        <input class="trait-search" type="search" placeholder="Поиск по механическим дебаффам..."
-                            data-trait-search="mech-debuff">
-                    </div>
-
-                    <div class="trait-list" data-trait-list="mech-debuff">
-                        {% for item in debuff_mech %}
-                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
-                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
-                            <input type="checkbox" name="debuff_mech_ids" value="{{ item.uid }}" data-pool="mech"
-                                data-effect="plus" data-cost="{{ item.cost }}">
-                            <span class="trait-checkmark"></span>
-                            <span class="trait-main">
-                                <span class="trait-name">{{ item.name }}</span>
-                                <span class="trait-desc">{{ item.description }}</span>
-                            </span>
-                            <span class="trait-cost trait-cost-good">+{{ item.cost }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="trait-pane" data-tab-pane="mech-skill">
-                    <div class="trait-toolbar">
-                        <input class="trait-search" type="search" placeholder="Поиск по навыкам..."
-                            data-trait-search="mech-skill">
-                    </div>
-
-                    <div class="trait-list" data-trait-list="mech-skill">
-                        {% for item in skills %}
-                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
-                            data-desc="{{ item.description|lower }}" data-is_bio="{{ item.is_bio }}"
-                            data-is-bio="{{ item.is_bio }}">
-                            <input type="checkbox" name="skill_ids" value="{{ item.uid }}" data-pool="mech"
-                                data-effect="minus" data-cost="{{ item.cost }}">
-                            <span class="trait-checkmark"></span>
-                            <span class="trait-main">
-                                <span class="trait-name">{{ item.name }}</span>
-                                <span class="trait-desc">{{ item.description }}</span>
-                            </span>
-                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="panel">
-            <div class="panel-title">РП-черты</div>
-
-            <div class="trait-tabs" data-tab-root="rp">
-                <div class="trait-tab-bar">
-                    <button type="button" class="trait-tab active" data-tab-open="rp-buff">Баффы</button>
-                    <button type="button" class="trait-tab" data-tab-open="rp-debuff">Дебаффы</button>
-                </div>
-
-                <div class="trait-pane active" data-tab-pane="rp-buff">
-                    <div class="trait-toolbar">
-                        <input class="trait-search" type="search" placeholder="Поиск по РП-баффам..."
-                            data-trait-search="rp-buff">
-                    </div>
-
-                    <div class="trait-list" data-trait-list="rp-buff">
-                        {% for item in buff_rp %}
-                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
-                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
-                            <input type="checkbox" name="buff_rp_ids" value="{{ item.uid }}" data-pool="rp"
-                                data-effect="minus" data-cost="{{ item.cost }}">
-                            <span class="trait-checkmark"></span>
-                            <span class="trait-main">
-                                <span class="trait-name">{{ item.name }}</span>
-                                <span class="trait-desc">{{ item.description }}</span>
-                            </span>
-                            <span class="trait-cost trait-cost-bad">-{{ item.cost }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="trait-pane" data-tab-pane="rp-debuff">
-                    <div class="trait-toolbar">
-                        <input class="trait-search" type="search" placeholder="Поиск по РП-дебаффам..."
-                            data-trait-search="rp-debuff">
-                    </div>
-
-                    <div class="trait-list" data-trait-list="rp-debuff">
-                        {% for item in debuff_rp %}
-                        <label class="trait-item" data-trait-item data-name="{{ item.name|lower }}"
-                            data-desc="{{ item.description|lower }}" data-is-bio="{{ item.is_bio }}">
-                            <input type="checkbox" name="debuff_rp_ids" value="{{ item.uid }}" data-pool="rp"
-                                data-effect="plus" data-cost="{{ item.cost }}">
-                            <span class="trait-checkmark"></span>
-                            <span class="trait-main">
-                                <span class="trait-name">{{ item.name }}</span>
-                                <span class="trait-desc">{{ item.description }}</span>
-                            </span>
-                            <span class="trait-cost trait-cost-good">+{{ item.cost }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
+                {% for group in trait_groups %}
+                {{ render_trait_group(group, traits) }}
+                {% endfor %}
             </div>
         </section>
     </div>
@@ -322,9 +299,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="panel-text">
-                Доступных лорных персонажей сейчас нет.
-            </div>
+            <div class="panel-text">Доступных лорных персонажей сейчас нет.</div>
             {% endif %}
         </section>
     </div>
@@ -338,9 +313,11 @@
 </form>
 
 {% include "partials/lore_slot_modal.html" %}
+{% include "partials/status_popup.html" %}
 
 {% endblock %}
 
 {% block extra_js_body %}
+<script src="{{ 'js/status_popup.js' | ver }}"></script>
 <script src="{{ 'js/character_create.js' | ver }}"></script>
 {% endblock %}

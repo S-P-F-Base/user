@@ -3,10 +3,6 @@
     flex-direction: column;
 }
 
-.required-mark {
-    color: var(--bad);
-}
-
 /* BASIC FORM */
 .form-grid {
     display: grid;
@@ -56,6 +52,13 @@
     background: #101010;
     color: var(--text);
     font: inherit;
+}
+
+.form-input.is-required-empty,
+.form-select.is-required-empty,
+.form-textarea.is-required-empty {
+    border-color: var(--bad);
+    box-shadow: inset 0 0 0 1px rgba(229, 115, 115, 0.35);
 }
 
 .form-input:focus,
@@ -110,6 +113,45 @@
 
 .dynamic-link-remove[hidden] {
     display: none !important;
+}
+
+.dynamic-link-input:invalid {
+    border-color: var(--bad);
+}
+
+.dynamic-link-input.is-valid,
+#model-id.is-valid {
+    border-color: var(--ok);
+    box-shadow: inset 0 0 0 1px rgba(102, 187, 106, 0.35);
+}
+
+.dynamic-link-input.is-invalid,
+#model-id.is-invalid {
+    border-color: var(--bad);
+    box-shadow: inset 0 0 0 1px rgba(229, 115, 115, 0.35);
+}
+
+.workshop-inline-state {
+    margin-top: 0.55rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+}
+
+.workshop-inline-state.is-good {
+    color: var(--ok);
+}
+
+.workshop-inline-state.is-bad {
+    color: var(--bad);
+}
+
+.workshop-inline-state.is-info {
+    color: var(--muted);
+}
+
+.form-textarea-large {
+    min-height: 180px;
 }
 
 /* POOLS */
@@ -177,6 +219,7 @@
     flex-wrap: wrap;
     gap: 0.45rem;
 }
+
 
 .trait-tab {
     padding: 0.48rem 0.7rem;
@@ -286,6 +329,31 @@
     word-break: break-word;
 }
 
+.trait-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.1rem;
+}
+
+.trait-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.38rem;
+    border: 1px solid #333;
+    background: #161616;
+    color: #ddd;
+    font-size: 0.68rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.trait-chip-muted {
+    color: var(--muted);
+    border-color: #2e2e2e;
+}
+
 .trait-cost {
     font-size: 0.82rem;
     font-weight: 600;
@@ -299,6 +367,10 @@
 
 .trait-cost-bad {
     color: var(--bad);
+}
+
+.trait-cost-neutral {
+    color: var(--muted);
 }
 
 .trait-item[hidden] {

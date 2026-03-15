@@ -7,5 +7,5 @@ def get_dummy_user() -> dict[str, Any]:
         "avatar": "https://placehold.co/128x128",
         "steam_id": "XXX",
         "discord_id": "XXX",
-        "is_admin": False,
+        "is_admin": True,
     }

@@ -1,0 +1,14 @@
+{% if popup %}
+<div class="status-popup-backdrop" id="status-popup" data-status-popup>
+    <div class="status-popup-dialog status-popup-{{ popup.type }}" role="dialog" aria-modal="true"
+        aria-labelledby="status-popup-title">
+        <div class="status-popup-title" id="status-popup-title">
+            {% if popup.type == "bad" %}Ошибка{% else %}Готово{% endif %}
+        </div>
+        <div class="status-popup-text">{{ popup.text }}</div>
+        <div class="status-popup-actions">
+            <button type="button" class="status-popup-btn" data-status-popup-close>Понятно</button>
+        </div>
+    </div>
+</div>
+{% endif %}

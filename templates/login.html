@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -9,24 +9,32 @@
     <link rel="stylesheet" href="{{ 'css/login.css' | ver }}">
 </head>
 
-<body>
+<body class="login-page">
     <div class="page">
         <section class="login-wrap">
-            <div class="login-card">
+            {% if error or notice %}
+            <div class="login-feedback">
                 {% if error %}
                 <div class="login-alert">
                     {{ error }}
                 </div>
                 {% endif %}
+                {% if notice %}
+                <div class="login-notice">
+                    {{ notice }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
 
+            <div class="login-card">
                 <div class="login-title">
                     Авторизация
                 </div>
 
                 <div class="login-text">
                     Для входа используется Discord-аккаунт.<br>
-                    После подтверждения вы будете перенаправлены обратно на
-                    сайт.
+                    После подтверждения вы будете перенаправлены обратно на сайт.
                 </div>
 
                 <div class="login-actions">

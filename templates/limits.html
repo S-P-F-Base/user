@@ -1,0 +1,132 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Лимиты{% endblock %}
+{% block page_title %}Лимиты{% endblock %}
+{% block page_subtitle %}Список услуг и ограничений аккаунта{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ 'css/limits.css' | ver }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="panel limits-toolbar-panel">
+    <div class="panel-title">Фильтры</div>
+
+    <div class="limits-toolbar">
+        <div class="limits-control limits-control-wide">
+            <label class="limits-label" for="limits-search">Поиск</label>
+            <input class="limits-input" id="limits-search" type="search" placeholder="Название или описание услуги">
+        </div>
+
+        <div class="limits-control">
+            <label class="limits-label" for="limits-status-filter">Статус</label>
+            <select class="limits-select" id="limits-status-filter">
+                <option value="all">Все</option>
+                <option value="active">Активные</option>
+                <option value="permanent">Бессрочные</option>
+                <option value="expired">Истекшие</option>
+                <option value="revoked">Отозванные</option>
+                <option value="canceled">Отмененные игроком</option>
+            </select>
+        </div>
+
+        <div class="limits-control">
+            <label class="limits-label" for="limits-sort">Сортировка</label>
+            <select class="limits-select" id="limits-sort">
+                <option value="name_status">По имени и статусу</option>
+                <option value="expire_asc">Ближайшее истечение</option>
+                <option value="expire_desc">Дальнейшее истечение</option>
+            </select>
+        </div>
+    </div>
+
+    {% if limits %}
+    <div class="limits-pagination limits-pagination-top" data-limits-pagination>
+        <button class="limits-page-btn" type="button" data-page-action="first">Первая</button>
+        <button class="limits-page-btn" type="button" data-page-action="prev">Назад</button>
+        <div class="limits-page-state" data-page-state>Страница 1 из 1</div>
+        <button class="limits-page-btn" type="button" data-page-action="next">Вперед</button>
+        <button class="limits-page-btn" type="button" data-page-action="last">Последняя</button>
+    </div>
+    {% endif %}
+</section>
+
+{% if limits %}
+<section class="limits-list-wrap">
+    <div class="limits-list" id="limits-list">
+        {% for item in limits %}
+        <article class="limit-card status-{{ item.status }}" data-limit-item data-order-index="{{ item.order_index }}"
+            data-search="{{ item.search_blob }}" data-status="{{ item.status }}" data-title="{{ item.title }}"
+            data-expires-ts="{{ item.expires_ts }}">
+            <header class="limit-card-head">
+                <div class="limit-card-title-wrap">
+                    <h3 class="limit-card-title">{{ item.title }}</h3>
+                </div>
+
+                <div class="limit-status status-{{ item.status }}">
+                    {{ item.status_label }}
+                </div>
+            </header>
+
+            <p class="limit-card-desc" data-limit-desc>{{ item.description }}</p>
+            <button type="button" class="limit-desc-toggle" data-limit-desc-toggle data-expand-label="Показать описание"
+                data-collapse-label="Скрыть описание" hidden>
+                Показать описание
+            </button>
+
+            <div class="limit-metrics">
+                {% if item.effects %}
+                {% for effect in item.effects %}
+                <div class="limit-metric">
+                    <div class="limit-metric-label">{{ effect.label }}</div>
+                    <div class="limit-metric-value">{{ effect.value }}</div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="limit-metric limit-metric-muted">
+                    <div class="limit-metric-label">Изменения</div>
+                    <div class="limit-metric-value">Нет изменений лимитов</div>
+                </div>
+                {% endif %}
+
+                <div class="limit-metric">
+                    <div class="limit-metric-label">Срок действия</div>
+                    <div class="limit-metric-value">
+                        {% if item.expires_at_utc %}
+                        <span class="js-limit-datetime" data-utc="{{ item.expires_at_utc }}">{{ item.expires_at_utc
+                            }}</span>
+                        {% else %}
+                        Бессрочно
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="limits-empty" id="limits-empty" hidden>
+        По текущим фильтрам ничего не найдено.
+    </div>
+
+    <div class="limits-pagination limits-pagination-bottom" data-limits-pagination>
+        <button class="limits-page-btn" type="button" data-page-action="first">Первая</button>
+        <button class="limits-page-btn" type="button" data-page-action="prev">Назад</button>
+        <div class="limits-page-state" data-page-state>Страница 1 из 1</div>
+        <button class="limits-page-btn" type="button" data-page-action="next">Вперед</button>
+        <button class="limits-page-btn" type="button" data-page-action="last">Последняя</button>
+    </div>
+</section>
+{% else %}
+<section class="panel">
+    <div class="panel-title">Лимиты</div>
+    <div class="panel-text">Список лимитов пуст.</div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ 'js/limits.js' | ver }}"></script>
+{% endblock %}

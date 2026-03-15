@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -32,18 +32,21 @@
                     Создать персонажа
                 </a>
 
-                <a class="nav-btn {% if active_page == 'limits' %}active{% endif %}" href="/user/limits">
+                <span class="nav-btn nav-btn-locked" aria-disabled="true" title="Раздел пока закрыт">
                     Лимиты
-                </a>
+                    <span class="nav-lock-tag">закрыто</span>
+                </span>
 
-                <a class="nav-btn {% if active_page == 'settings' %}active{% endif %}" href="/user/settings">
+                <span class="nav-btn nav-btn-locked" aria-disabled="true" title="Раздел пока закрыт">
                     Настройки
-                </a>
+                    <span class="nav-lock-tag">закрыто</span>
+                </span>
 
                 {% if user.is_admin %}
-                <a class="nav-btn nav-btn-admin {% if active_page == 'admin' %}active{% endif %}" href="/admin">
-                    Админ меню
-                </a>
+                <span class="nav-btn nav-btn-admin nav-btn-locked" aria-disabled="true" title="Раздел пока закрыт">
+                    Админ панель
+                    <span class="nav-lock-tag">закрыто</span>
+                </span>
                 {% endif %}
 
                 <a class="nav-btn nav-btn-danger" href="/user/logout">

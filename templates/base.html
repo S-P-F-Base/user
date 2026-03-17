@@ -36,10 +36,9 @@
                     Лимиты
                 </a>
 
-                <span class="nav-btn nav-btn-locked" aria-disabled="true" title="Раздел пока закрыт">
+                <a class="nav-btn {% if active_page == 'settings' %}active{% endif %}" href="/user/settings">
                     Настройки
-                    <span class="nav-lock-tag">закрыто</span>
-                </span>
+                </a>
 
                 {% if user.is_admin %}
                 <span class="nav-btn nav-btn-admin nav-btn-locked" aria-disabled="true" title="Раздел пока закрыт">

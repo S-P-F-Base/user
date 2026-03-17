@@ -34,6 +34,8 @@ ERROR_MAP: dict[str, str] = {
     "discord_internal_error": "Ошибка Discord-авторизации.",
     "discord_http_error": "Сетевая ошибка при Discord-авторизации.",
     "discord_unexpected_error": "Неожиданная ошибка при Discord-авторизации.",
+    "steam_requires_discord_login": "Для привязки Steam нужно войти через Discord.",
+    "steam_already_linked": "Steam уже привязан к этому аккаунту. Перепривязка недоступна.",
     "steam_verification_failed": "Не удалось подтвердить вход через Steam.",
     "steam_internal_error": "Ошибка Steam-авторизации.",
     "steam_http_error": "Сетевая ошибка при Steam-авторизации.",

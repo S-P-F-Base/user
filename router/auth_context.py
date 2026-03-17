@@ -17,11 +17,27 @@ AUTH_COOKIE_NAME = "auth_token"
 SESSION_COOKIE_NAME = "session"
 LOGIN_PATH = "/user/login"
 DEFAULT_AFTER_LOGIN = "/user"
+LOCAL_AUTH_PAYLOAD: dict[str, str] = {
+    "provider": "local",
+    "cid": "local-cid",
+    "discord_id": "local-discord-id",
+    "discord_username": "Local Dev",
+    "steam_id": "local-steam-id",
+    "steam_persona": "Local Dev",
+}
 
 _AUTH_PAYLOAD_CTX: contextvars.ContextVar[dict[str, Any]] = contextvars.ContextVar(
     "auth_payload",
     default={},
 )
+
+
+def is_local_run(request: Request) -> bool:
+    return bool(getattr(request.app.state, "is_local_run", False))
+
+
+def build_dev_auth_payload() -> dict[str, Any]:
+    return dict(LOCAL_AUTH_PAYLOAD)
 
 
 def _b64url_encode(data: bytes) -> str:
@@ -103,15 +119,16 @@ def get_request_auth_payload(request: Request) -> dict[str, Any]:
 
     token = extract_request_token(request)
     payload = decode_auth_token(token) or {}
+    if not payload and is_local_run(request):
+        payload = build_dev_auth_payload()
+
     request.state.auth_payload = payload
     return payload
 
 
 def is_authenticated_payload(payload: dict[str, Any]) -> bool:
     return bool(
-        payload.get("discord_id")
-        or payload.get("steam_id")
-        or payload.get("cid")
+        payload.get("discord_id") or payload.get("steam_id") or payload.get("cid")
     )
 
 

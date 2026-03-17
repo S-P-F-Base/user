@@ -1,0 +1,288 @@
+.settings-hero {
+    margin-top: 0;
+    border-left-color: #6b4b2b;
+    background:
+        radial-gradient(140px 80px at 92% 12%, rgba(255, 152, 0, 0.18) 0%, rgba(255, 152, 0, 0) 70%),
+        linear-gradient(180deg, #1b1814 0%, #14110d 100%);
+}
+
+.settings-hero-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.settings-hero-title {
+    margin: 0;
+}
+
+.settings-hero-text {
+    margin-top: 0.22rem;
+    font-size: 0.84rem;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.settings-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 1rem;
+}
+
+.settings-card {
+    margin-top: 0;
+}
+
+.settings-card-main {
+    border-left-color: #6b4a2d;
+}
+
+.settings-card-side {
+    border-left-color: #5a4426;
+}
+
+.settings-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.settings-card-title-wrap {
+    min-width: 0;
+}
+
+.settings-card-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #ffb74d;
+}
+
+.settings-card-subtitle {
+    margin-top: 0.18rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.settings-item {
+    margin-top: 0.75rem;
+    padding: 0.75rem 0.8rem;
+    background: #101010;
+    border: 1px solid #232323;
+}
+
+.settings-label {
+    margin-bottom: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.settings-value {
+    font-size: 0.9rem;
+    color: var(--text);
+    word-break: break-all;
+}
+
+.settings-state {
+    margin-top: 0.8rem;
+    padding: 0.65rem 0.7rem;
+    border: 1px solid #2f4a34;
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.13) 0%, rgba(76, 175, 80, 0.05) 100%);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.settings-state-title {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #d8f8db;
+}
+
+.settings-state-text {
+    margin-top: 0.16rem;
+    color: #d0dcd1;
+}
+
+.settings-state-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #d8f8db;
+}
+
+.settings-state-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.settings-btn {
+    margin-top: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 190px;
+    padding: 0.48rem 0.7rem;
+    border: 1px solid #2a2a2a;
+    background: #101010;
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    justify-content: center;
+}
+
+.settings-btn:hover {
+    border-color: var(--accent);
+    color: #ffb74d;
+    background: #151515;
+}
+
+.settings-btn-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+}
+
+.settings-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.settings-note {
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.settings-card-side-title {
+    font-size: 0.92rem;
+    color: #ffb74d;
+    font-weight: 600;
+}
+
+.settings-feature-list {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.settings-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.58rem;
+    padding: 0.62rem 0.65rem;
+    background: #101010;
+    border: 1px solid #232323;
+}
+
+.settings-feature-title {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.settings-feature-text {
+    margin-top: 0.18rem;
+    font-size: 0.76rem;
+    color: var(--muted);
+    line-height: 1.42;
+}
+
+.settings-picto {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: #ffc77b;
+}
+
+.settings-picto svg {
+    width: 100%;
+    height: 100%;
+}
+
+.settings-picto-hero {
+    width: 28px;
+    height: 28px;
+    color: #ffbf66;
+}
+
+@media (max-width: 920px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .settings-hero-head {
+        gap: 0.62rem;
+    }
+
+    .settings-hero-text {
+        font-size: 0.8rem;
+    }
+
+    .settings-card-title {
+        font-size: 0.92rem;
+    }
+
+    .settings-card-subtitle {
+        font-size: 0.76rem;
+    }
+
+    .settings-item {
+        margin-top: 0.65rem;
+        padding: 0.65rem 0.7rem;
+    }
+
+    .settings-label {
+        font-size: 0.72rem;
+    }
+
+    .settings-value {
+        font-size: 0.84rem;
+    }
+
+    .settings-state {
+        margin-top: 0.65rem;
+        padding: 0.55rem 0.62rem;
+        font-size: 0.78rem;
+        gap: 0.5rem;
+    }
+
+    .settings-state-title {
+        font-size: 0.8rem;
+    }
+
+    .settings-btn {
+        width: 100%;
+        min-width: 0;
+        margin-top: 0.65rem;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.78rem;
+    }
+
+    .settings-note {
+        font-size: 0.74rem;
+    }
+
+    .settings-card-side-title {
+        font-size: 0.86rem;
+    }
+
+    .settings-feature {
+        padding: 0.55rem 0.58rem;
+    }
+
+    .settings-feature-title {
+        font-size: 0.78rem;
+    }
+
+    .settings-feature-text {
+        font-size: 0.73rem;
+    }
+}

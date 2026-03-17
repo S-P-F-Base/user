@@ -39,6 +39,7 @@ body {
     display: grid;
     grid-template-columns: 220px 1fr;
     gap: 1.25rem;
+    align-items: start;
 }
 
 .content {
@@ -49,6 +50,7 @@ body {
 .sidebar {
     border-right: 1px solid var(--line-soft);
     padding-right: 0.8rem;
+    align-self: start;
 }
 
 .nav-header {
@@ -92,7 +94,7 @@ body {
 }
 
 .nav-btn-admin:hover {
-    border-left-color: #64b5f6;
+    border-left-color: var(--accent);
 }
 
 .nav-btn-locked {

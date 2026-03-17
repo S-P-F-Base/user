@@ -88,14 +88,18 @@ def resolve_status(
     if status == "active":
         if is_permanent_by_time:
             return "permanent"
+
         if is_expired_by_time:
             return "expired"
+
         return "active"
 
     if is_permanent_by_time:
         return "permanent"
+
     if is_expired_by_time:
         return "expired"
+
     return "active"
 
 

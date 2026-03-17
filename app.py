@@ -14,7 +14,10 @@ from router.characters_create import router as characters_create_router
 from router.limits import router as limits_router
 from router.login import router as login_router
 from router.overlord_api import router as overlord_api_router
+from router.settings import router as settings_router
 from router.user import router as user_router
+
+IS_LOCAL_RUN = os.getenv("FASTAPISTATIC") == "1"
 
 
 @contextlib.asynccontextmanager
@@ -32,8 +35,9 @@ app = FastAPI(
     redoc_url=None,
     openapi_url=None,
 )
+app.state.is_local_run = IS_LOCAL_RUN
 
-if os.getenv("FASTAPISTATIC") == "1":
+if IS_LOCAL_RUN:
     app.mount(
         "/static",
         StaticFiles(directory="static"),
@@ -54,6 +58,7 @@ async def auth_context_middleware(request: Request, call_next):
 
 app.include_router(overlord_api_router)
 app.include_router(user_router)
+app.include_router(settings_router)
 app.include_router(limits_router)
 app.include_router(characters_router)
 app.include_router(characters_create_router)
